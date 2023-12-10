@@ -3,10 +3,10 @@ const fs = require('fs')
 const port = process.env.port
 
 const server = http.createServer((req, res) => {
-    fs.readFile('site.html', (err, file) => {
-        res.writeHead(200, {'Content-Type':'text/html'})
-        res.write(file)
-        return res.end()
+    fs.appendFile('test.txt', 'Arabic course', (err) => {
+        if (err) throw err
+        console.log('File created')
+        res.end()
     })
 })
 
