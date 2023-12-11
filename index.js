@@ -1,9 +1,13 @@
 const express = require('express')
-const app = express()
-const port = process.env.PORT
+const rotas = require('./rotas')
+const port = process.env.PORT || 3000
 
-app.get('/', (req, res) => {
-    res.send('Node.js!')
+const app = express()
+
+app.use('/', rotas)
+
+app.get('*', (req, res) => {
+    res.send("Channel: Saulo programmer")
 })
 
-app.listen(port || 3000, () => {console.log('Server running')})
+app.listen(port, () => {console.log('Running...')})
