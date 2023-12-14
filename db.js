@@ -13,4 +13,12 @@ const todosClientes = async() => {
     const [linhas] = await con.query('SELECT * FROM people')
     return await linhas
 }
-module.exports = {todosClientes}
+
+const insereClientes = async(clientes) => {
+    const con = await conectar()
+    const sql = 'INSERT INTO people (name, age) VALUES (?,?)'
+    const valores = [clientes.name, clientes.age]
+    const [linhas] = await con.query(sql,valores)
+}
+
+module.exports = {todosClientes, insereClientes}
