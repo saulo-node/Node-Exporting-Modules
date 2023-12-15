@@ -1,21 +1,28 @@
 const http = require('http')
-const events = require('events')
-const EventoEmissor = new events.EventEmitter()
-
-const final = () => {console.log('Fim do processo')}
-
-EventoEmissor.on('msg', () => {console.log('Node.js course 3000')})
-EventoEmissor.on('fim', final)
-
-
 const port = process.env.PORT || 3000
-const returning = () => {console.log('Server running...')}
+const formidavel = require('formidable')
+const fs = require('fs')
+
 const server = http.createServer((req, res) => {
-    EventoEmissor.emit('msg')
-    res.writeHead(200, {'Content-Type':'text/plain'})
-    res.write('Node.js - Saulo')
-    EventoEmissor.emit('fim')
-    res.end()
+    if (req.url == '/envioDeArquivo') {
+        const form = new formidavel.IncomingForm();
+        form.parse(req, (erro, campos, arquivos) => {
+            const urlantiga = arquivos.filetoupload.path
+            const urlnova = 'C:/Users/Notebook/OneDrive/Área de Trabalho/' + arquivos.filetoupload.name
+            fs.rename(urlantiga, urlnova, (erro) => {
+                if (erro) throw erro
+                res.write('Arquivo movido!')
+                res.end()
+            })
+        })
+    } else {
+        res.writeHead(200, {'Content-Type': 'text/html'})
+        res.write('<form action="envioDeArquivo" method="post" enctype="multipart/form-data">');
+        res.write('<input type="file" name="filetoupload"><br>')
+        res.write('<input type="submit" value="Enviar">')
+        res.write('</form>')
+        res.end()
+    }
 })
 
-server.listen(port, returning)
+server.listen(port)
