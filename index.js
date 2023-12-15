@@ -1,21 +1,21 @@
-(async () => {
-    const  db = require('./db')
-    // console.log('Novo cliente inserido')
-    // const na = "Abdullah"
-    // const ag = 18
-    // await db.insereClientes({name: na,age: ag})
+const http = require('http')
+const events = require('events')
+const EventoEmissor = new events.EventEmitter()
 
-    // const id = 2
-    // const na = "Moreach"
-    // const ag = 38
-    // await db.atualizaClientes(id, {name: na,age: ag})
-    // console.log('Cliente' +  'atualizado')
+const final = () => {console.log('Fim do processo')}
 
-    const id = 3
-    await db.deletarClientes(id)
-    console.log('Cliente' +  id + 'deletado')
+EventoEmissor.on('msg', () => {console.log('Node.js course 3000')})
+EventoEmissor.on('fim', final)
 
-    console.log('Obter todos os clientes')
-    const clientes = await db.todosClientes()
-    console.log(clientes)
-})()
+
+const port = process.env.PORT || 3000
+const returning = () => {console.log('Server running...')}
+const server = http.createServer((req, res) => {
+    EventoEmissor.emit('msg')
+    res.writeHead(200, {'Content-Type':'text/plain'})
+    res.write('Node.js - Saulo')
+    EventoEmissor.emit('fim')
+    res.end()
+})
+
+server.listen(port, returning)
