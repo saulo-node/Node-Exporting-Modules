@@ -1,28 +1,14 @@
-const http = require('http')
-const port = process.env.PORT || 3000
-const formidavel = require('formidable')
-const fs = require('fs')
+const mongodb = require('mongodb').MongoClient
+const url = "mongodb+srv://saulo:<password>@cluster0.ifeepdx.mongodb.net/?retryWrites=true&w=majority";
 
-const server = http.createServer((req, res) => {
-    if (req.url == '/envioDeArquivo') {
-        const form = new formidavel.IncomingForm();
-        form.parse(req, (erro, campos, arquivos) => {
-            const urlantiga = arquivos.filetoupload.path
-            const urlnova = 'C:/Users/Notebook/OneDrive/Área de Trabalho/' + arquivos.filetoupload.name
-            fs.rename(urlantiga, urlnova, (erro) => {
-                if (erro) throw erro
-                res.write('Arquivo movido!')
-                res.end()
-            })
-        })
-    } else {
-        res.writeHead(200, {'Content-Type': 'text/html'})
-        res.write('<form action="envioDeArquivo" method="post" enctype="multipart/form-data">');
-        res.write('<input type="file" name="filetoupload"><br>')
-        res.write('<input type="submit" value="Enviar">')
-        res.write('</form>')
-        res.end()
-    }
+mongodb.connect(url, (error, banco) => {
+    if(erro) throw erro;
+    const dbo = banco.db("Aprenda Hebraico com a Bíblia")
+    const obj = {curso:"Curso de Alef Bet", canal:"Aprenda hebraico com a Bíblia"}
+    const colecao = "cursos"
+    dbo.collection(colecao).insertOne(obj, (erro, resultado) => {
+        if(erro) throw erro
+        console.log("1 novo curso inserido")
+        banco.close()
+    })
 })
-
-server.listen(port)
