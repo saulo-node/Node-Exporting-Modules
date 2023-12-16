@@ -6,9 +6,17 @@ mongodb.connect(url, (error, banco) => {
     const dbo = banco.db("Aprenda Hebraico com a Bíblia")
     const obj = {curso:"Curso de Alef Bet", canal:"Aprenda hebraico com a Bíblia"}
     const colecao = "cursos"
-    dbo.collection(colecao).insertOne(obj, (erro, resultado) => {
+
+    // dbo.collection(colecao).insertOne(obj, (erro, resultado) => {
+    //     if(erro) throw erro
+    //     console.log("1 novo curso inserido")
+    //     banco.close()
+    // })
+
+    
+    dbo.collection(colecao).findOne({}, (erro, resultado) => {
         if(erro) throw erro
-        console.log("1 novo curso inserido")
+        console.log(console.log(resultado))
         banco.close()
     })
 })
